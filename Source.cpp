@@ -2,12 +2,52 @@
 
 using namespace std;
 
+void br_int()
+{
+	cout << "Enter an integer. (-2147483648 <= x <= 2147483647)\n";
+	int integer_number;
+	cin >> integer_number;
+	//Значение для сравнения с битами вводимого числа.
+	int marker = 1 << 31;
+	//Двигаемся от страшего (знакового) бита к младшему.
+	for (short int i = 0; i < 32; i++)
+	{
+		if ((marker & integer_number) == marker)
+		{
+			if (i == 0)
+			{
+				cout << "1 ";
+				marker = 1 << 30;
+			}
+			else
+			{
+				cout << "1";
+				marker = marker >> 1;
+			}
+		}
+		else
+		{
+			if (i == 0)
+			{
+				cout << "0 ";
+				marker = 1 << 30;
+			}
+			else
+			{
+				cout << "0";
+				marker = marker >> 1;
+			}
+		}
+	}
+	cout << endl;
+}
+
 int main()
 {
 	char end = 'y';
 	while (end == 'y')
 	{
-		cout << "Enter the number of the corresponding data type. (Arabic numerals only.)\n";
+		cout << "Enter the number of the corresponding data type or function. (Arabic numerals only.)\n";
 		cout << "1 - int. 2 - short int. 3 - unsigned int.\n";
 		cout << "4 - float. 5 - double.\n";
 		cout << "6 - function that swaps bits by number.\n";
@@ -16,7 +56,7 @@ int main()
 		switch (selector)
 		{
 		case 1:
-			;
+			br_int();
 		case 2:
 			;
 		case 3:
