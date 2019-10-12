@@ -5,7 +5,7 @@ using namespace std;
 
 void br_int()
 {
-	cout << "Enter an integer. (-2147483648 <= x <= 2147483647)\n";
+	cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
 	int integer_number;
 	cin >> integer_number;
 	//Значение для сравнения с битами вводимого числа.
@@ -57,11 +57,11 @@ void br_int()
 
 void br_short_int()
 {
-	cout << "Enter an short integer. (-32768 <= x <= 32767)\n";
-	int short_integer_number;
+	cout << "Enter an short integer. (-32767 <= x <= 32767)\n";
+	short int short_integer_number;
 	cin >> short_integer_number;
 	//Значение для сравнения с битами вводимого числа.
-	int marker = 1 << 15;
+	short int marker = 1 << 15;
 	//Для отображения значащих разрядов.
 	short int significant_rank = 0;
 	//Двигаемся от страшего (знакового) бита к младшему.
@@ -107,6 +107,42 @@ void br_short_int()
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
+void br_unsigned_int()
+{
+	cout << "Enter an unsigned integer. (0 <= x <= 4294967295)\n";
+	unsigned int integer_unsigned_number;
+	cin >> integer_unsigned_number;
+	//Значение для сравнения с битами вводимого числа.
+	unsigned int marker = 1 << 31;
+	//Для отображения значащих разрядов.
+	short int significant_rank = 0;
+	//Двигаемся от страшего бита к младшему.
+	for (short int i = 0; i < 32; i++)
+	{
+		if ((marker & integer_unsigned_number) == marker)
+		{
+			if (significant_rank == 0)
+			{
+					significant_rank += 1;
+					//Выделение значащих разрядов цветом.
+					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			}
+			cout << "1";
+			marker = marker >> 1;
+		}
+		else
+		{
+			cout << "0";
+			marker = marker >> 1;
+		}
+	}
+	cout << endl;
+	//Обратная процедура
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+}
+
 int main()
 {
 	char end = 'y';
@@ -125,7 +161,7 @@ int main()
 		case 2:
 			br_short_int();
 		case 3:
-			;
+			br_unsigned_int();
 		case 4:
 			;
 		case 5:
