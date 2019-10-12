@@ -7,7 +7,7 @@ void br_int()
 	cout << "Enter an integer. (-2147483648 <= x <= 2147483647)\n";
 	int integer_number;
 	cin >> integer_number;
-	//Значение для сравнения с битами вводимого числа.
+	//Значение для сравнения с битами вводимого числа. проверка
 	int marker = 1 << 31;
 	//Двигаемся от страшего (знакового) бита к младшему.
 	for (short int i = 0; i < 32; i++)
@@ -70,7 +70,6 @@ int main()
 		default:
 			cout << "There is no type or function with this number!\n";
 		}
-
 		//Проверка на повторный запуск программы.
 		cout << "Run this program again now? (y/n) (one lowercase letter and 'Enter')\n";
 		cin >> end;
