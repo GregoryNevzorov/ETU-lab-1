@@ -143,6 +143,35 @@ void br_unsigned_int()
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
+void br_float()
+{
+	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
+	float float_number;
+	cin >> float_number;
+	//Указатель типа int ссылается на значение по адресу переменной типа float.
+	int* pointer = reinterpret_cast<int*>(&float_number);
+	//Переменная типа int получает двоичное представление переменной float через указатель.
+	//Компилятор будет интерпретировать этот двоичный код как переменную типа int.
+	int gross_transformation = * pointer;
+	//Значение для сравнения с битами вводимого числа.
+	unsigned int marker = 1 << 31;
+	//Двигаемся от страшего бита к младшему.
+	for (short int i = 0; i < 32; i++)
+	{
+		if ((marker & gross_transformation) == marker)
+		{
+			cout << "1";
+			marker = marker >> 1;
+		}
+		else
+		{
+			cout << "0";
+			marker = marker >> 1;
+		}
+	}
+	cout << endl;
+}
+
 int main()
 {
 	char end = 'y';
@@ -163,7 +192,7 @@ int main()
 		case 3:
 			br_unsigned_int();
 		case 4:
-			;
+			br_float();
 		case 5:
 			;
 		case 6:
