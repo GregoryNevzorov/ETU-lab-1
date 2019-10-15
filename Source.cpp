@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Windows.h> //Дает возможность изменять цвет выводимых в консоль символов.
+#include <Windows.h>
 
 using namespace std;
 
@@ -50,7 +50,7 @@ void br_int()
 		}
 	}
 	cout << endl;
-	//Обратная процедура
+	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
@@ -61,7 +61,7 @@ void br_short_int()
 	short int short_integer_number;
 	cin >> short_integer_number;
 	//Значение для сравнения с битами вводимого числа.
-	short int marker = 1 << 15;
+	int marker = 1 << 15;
 	//Для отображения значащих разрядов.
 	short int significant_rank = 0;
 	//Двигаемся от страшего (знакового) бита к младшему.
@@ -102,7 +102,7 @@ void br_short_int()
 		}
 	}
 	cout << endl;
-	//Обратная процедура
+	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
@@ -138,7 +138,7 @@ void br_unsigned_int()
 		}
 	}
 	cout << endl;
-	//Обратная процедура
+	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
@@ -160,13 +160,39 @@ void br_float()
 	{
 		if ((marker & gross_transformation) == marker)
 		{
-			cout << "1";
-			marker = marker >> 1;
+			if (i == 0)
+			{
+				//Выделение знакового разряда синим цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				cout << "1";
+				marker = marker >> 1;
+				//Обратная процедура внутри одного блока.
+				SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+			}
+			else
+			{
+				cout << "1";
+				marker = marker >> 1;
+			}
 		}
 		else
 		{
-			cout << "0";
-			marker = marker >> 1;
+			if (i == 0)
+			{
+				//Выделение знакового разряда синим цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				cout << "0";
+				marker = marker >> 1;
+				//Обратная процедура внутри одного блока.
+				SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+			}
+			else
+			{
+				cout << "0";
+				marker = marker >> 1;
+			}
 		}
 	}
 	cout << endl;
@@ -187,12 +213,16 @@ int main()
 		{
 		case 1:
 			br_int();
+			break;
 		case 2:
 			br_short_int();
+			break;
 		case 3:
 			br_unsigned_int();
+			break;
 		case 4:
 			br_float();
+			break;
 		case 5:
 			;
 		case 6:
