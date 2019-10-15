@@ -167,8 +167,16 @@ void br_float()
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
 				cout << "1";
 				marker = marker >> 1;
-				//Обратная процедура внутри одного блока.
-				SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+				//Переход на цвет зеленый порядка.
+				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_GREEN);
+			}
+			if (i == 9)
+			{
+				//Выделение мантиссы красным цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_RED);
+				cout << "1";
+				marker = marker >> 1;
 			}
 			else
 			{
@@ -185,8 +193,16 @@ void br_float()
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
 				cout << "0";
 				marker = marker >> 1;
-				//Обратная процедура внутри одного блока.
-				SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+				//Переход на цвет зеленый порядка.
+				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_GREEN);
+			}
+			if (i == 9)
+			{
+				//Выделение мантиссы красным цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_RED);
+				cout << "0";
+				marker = marker >> 1;
 			}
 			else
 			{
@@ -196,6 +212,9 @@ void br_float()
 		}
 	}
 	cout << endl;
+	//Обратная процедура.
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
 int main()
@@ -206,7 +225,7 @@ int main()
 		cout << "Enter the number of the corresponding data type or function. (Arabic numerals only.)\n";
 		cout << "1 - int. 2 - short int. 3 - unsigned int.\n";
 		cout << "4 - float. 5 - double.\n";
-		cout << "6 - function that swaps bits by number.\n";
+		cout << "6 - function shifts all bits equal to one to the right.\n";
 		int selector;
 		cin >> selector;
 		switch (selector)
