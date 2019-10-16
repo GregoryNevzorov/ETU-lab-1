@@ -6,10 +6,10 @@ using namespace std;
 void br_int()
 {
 	cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
-	int integer_number;
+	long int integer_number;
 	cin >> integer_number;
 	//Значение для сравнения с битами вводимого числа.
-	int marker = 1 << 31;
+	unsigned long int marker = 1 << 31;
 	//Для отображения значащих разрядов.
 	short int significant_rank = 0;
 	//Двигаемся от страшего (знакового) бита к младшему.
@@ -20,7 +20,6 @@ void br_int()
 			if (i == 0)
 			{
 				cout << "1 ";
-				marker = 1 << 30;
 			}
 			else
 			{
@@ -32,21 +31,20 @@ void br_int()
                     SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 				}
 				cout << "1";
-				marker = marker >> 1;
 			}
+			marker = marker >> 1;
 		}
 		else
 		{
 			if (i == 0)
 			{
 				cout << "0 ";
-				marker = 1 << 30;
 			}
 			else
 			{
 				cout << "0";
-				marker = marker >> 1;
 			}
+			marker = marker >> 1;
 		}
 	}
 	cout << endl;
@@ -61,7 +59,7 @@ void br_short_int()
 	short int short_integer_number;
 	cin >> short_integer_number;
 	//Значение для сравнения с битами вводимого числа.
-	int marker = 1 << 15;
+	unsigned short int marker = 1 << 15;
 	//Для отображения значащих разрядов.
 	short int significant_rank = 0;
 	//Двигаемся от страшего (знакового) бита к младшему.
@@ -72,7 +70,6 @@ void br_short_int()
 			if (i == 0)
 			{
 				cout << "1 ";
-				marker = 1 << 14;
 			}
 			else
 			{
@@ -84,21 +81,20 @@ void br_short_int()
 					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 				}
 				cout << "1";
-				marker = marker >> 1;
 			}
+			marker = marker >> 1;
 		}
 		else
 		{
 			if (i == 0)
 			{
 				cout << "0 ";
-				marker = 1 << 14;
 			}
 			else
 			{
 				cout << "0";
-				marker = marker >> 1;
 			}
+			marker = marker >> 1;
 		}
 	}
 	cout << endl;
@@ -110,10 +106,10 @@ void br_short_int()
 void br_unsigned_int()
 {
 	cout << "Enter an unsigned integer. (0 <= x <= 4294967295)\n";
-	unsigned int integer_unsigned_number;
+	unsigned long int integer_unsigned_number;
 	cin >> integer_unsigned_number;
 	//Значение для сравнения с битами вводимого числа.
-	unsigned int marker = 1 << 31;
+	unsigned long int marker = 1 << 31;
 	//Для отображения значащих разрядов.
 	short int significant_rank = 0;
 	//Двигаемся от страшего бита к младшему.
@@ -129,13 +125,12 @@ void br_unsigned_int()
 					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 			}
 			cout << "1";
-			marker = marker >> 1;
 		}
 		else
 		{
 			cout << "0";
-			marker = marker >> 1;
 		}
+		marker = marker >> 1;
 	}
 	cout << endl;
 	//Обратная процедура.
@@ -143,7 +138,7 @@ void br_unsigned_int()
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
-void br_float()
+void br_float() //reinterpret_cast - no unions.
 {
 	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
 	float float_number;
@@ -152,9 +147,9 @@ void br_float()
 	int* pointer = reinterpret_cast<int*>(&float_number);
 	//Переменная типа int получает двоичное представление переменной float через указатель.
 	//Компилятор будет интерпретировать этот двоичный код как переменную типа int.
-	int gross_transformation = * pointer;
+	long int gross_transformation = * pointer;
 	//Значение для сравнения с битами вводимого числа.
-	unsigned int marker = 1 << 31;
+	unsigned long int marker = 1 << 31;
 	//Двигаемся от страшего бита к младшему.
 	for (short int i = 0; i < 32; i++)
 	{
@@ -165,24 +160,22 @@ void br_float()
 				//Выделение знакового разряда синим цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "1";
-				marker = marker >> 1;
+				cout << "1 ";
 				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_GREEN);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
 			if (i == 9)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_RED);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 				cout << "1";
-				marker = marker >> 1;
 			}
 			else
 			{
 				cout << "1";
-				marker = marker >> 1;
 			}
+			marker = marker >> 1;
 		}
 		else
 		{
@@ -191,30 +184,40 @@ void br_float()
 				//Выделение знакового разряда синим цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "0";
-				marker = marker >> 1;
+				cout << "0 ";
 				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_GREEN);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
 			if (i == 9)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, BACKGROUND_INTENSITY | BACKGROUND_RED);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 				cout << "0";
-				marker = marker >> 1;
 			}
 			else
 			{
 				cout << "0";
-				marker = marker >> 1;
 			}
+			marker = marker >> 1;
 		}
 	}
 	cout << endl;
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+}
+
+void br_double() //union.
+{
+	union double_to_int //Объявление объединения.
+	{
+		double source;
+		long int conversion;
+	};
+	double_to_int dti; //Создание экземпляра.
+	cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
+	cin >> dti.source;
 }
 
 int main()
@@ -243,7 +246,7 @@ int main()
 			br_float();
 			break;
 		case 5:
-			;
+			br_double();
 		case 6:
 			;
 		default:
