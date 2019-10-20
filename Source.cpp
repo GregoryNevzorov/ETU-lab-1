@@ -289,7 +289,7 @@ void br_double() //union.
 	cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
 	cin >> dti.source;
 	unsigned long int marker = 1 << 31;
-	for (short int i = 0; i < 32; i++) //Половина double, до битового смещения.
+	for (short int i = 0; i < 32; i++) //Правая половина double, до битового смещения.
 	{
 		if ((dti.conversion & marker) == marker)
 		{
@@ -340,67 +340,67 @@ void br_double() //union.
 			marker = marker >> 1;
 		}
 	}
-	    double* p = &dti.source;
-
-	    int* pointer = reinterpret_cast<int*>(p);
-		dti.conversion = *pointer;
-		marker = 1 << 31;
-		for (short int i = 0; i < 32; i++) //Половина double, до битового смещения.
+	double* ptr_double = &dti.source;
+	long int* ptr_int = reinterpret_cast<long int*>(ptr_double);
+	ptr_int++;
+	dti.conversion = *ptr_int;
+	marker = 1 << 31;
+	for (short int i = 0; i < 32; i++) //Правая половина double, до битового смещения.
+	{
+		if ((dti.conversion & marker) == marker)
 		{
-			if ((dti.conversion & marker) == marker)
+			if (i == 0)
 			{
-				if (i == 0)
-				{
-					//Выделение знакового разряда синим цветом.
-					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-					SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-					cout << "1 ";
-					//Переход на цвет зеленый порядка.
-					SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-				}
-				if (i == 11)
-				{
-					//Выделение мантиссы красным цветом.
-					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-					SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-					cout << "1";
-				}
-				else
-				{
-					cout << "1";
-				}
-				marker = marker >> 1;
+				//Выделение знакового разряда синим цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				cout << "1 ";
+				//Переход на цвет зеленый порядка.
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+			}
+			if (i == 11)
+			{
+				//Выделение мантиссы красным цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
+				cout << "1";
 			}
 			else
 			{
-				if (i == 0)
-				{
-					//Выделение знакового разряда синим цветом.
-					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-					SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-					cout << "0 ";
-					//Переход на цвет зеленый порядка.
-					SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-				}
-				if (i == 11)
-				{
-					//Выделение мантиссы красным цветом.
-					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-					SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-					cout << "0";
-				}
-				else
-				{
-					cout << "0";
-				}
-				marker = marker >> 1;
+				cout << "1";
 			}
-
+			marker = marker >> 1;
 		}
-		cout << endl;
-		//Обратная процедура.
-		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+		else
+		{
+			if (i == 0)
+			{
+				//Выделение знакового разряда синим цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
+				cout << "0 ";
+				//Переход на цвет зеленый порядка.
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+			}
+			if (i == 11)
+			{
+				//Выделение мантиссы красным цветом.
+				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
+				cout << "0";
+			}
+			else
+			{
+				cout << "0";
+			}
+			marker = marker >> 1;
+		}
+	}
+	//Конец функции.
+	cout << endl;
+	//Обратная процедура.
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
 int main()
