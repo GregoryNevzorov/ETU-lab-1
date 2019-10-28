@@ -11,7 +11,7 @@ void br_int()
 	//Значение для сравнения с битами вводимого числа.
 	unsigned long int marker = 1 << 31;
 	//Для отображения значащих разрядов.
-	short int significant_rank = 0;
+	short int significant_rank;
 	//Двигаемся от страшего (знакового) бита к младшему.
 	for (short int i = 0; i < 32; i++)
 	{
@@ -19,6 +19,7 @@ void br_int()
 		{
 			if (i == 0)
 			{
+				significant_rank = -1;
 				cout << "1 ";
 			}
 			else
@@ -37,10 +38,18 @@ void br_int()
 		{
 			if (i == 0)
 			{
+				significant_rank = 0;
 				cout << "0 ";
 			}
 			else
 			{
+				if (significant_rank == -1)
+				{
+					significant_rank += 2;
+					//Выделение значащих разрядов цветом.
+					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+				}
 				cout << "0";
 			}
 		}
@@ -60,7 +69,7 @@ void br_short_int()
 	//Значение для сравнения с битами вводимого числа.
 	unsigned short int marker = 1 << 15;
 	//Для отображения значащих разрядов.
-	short int significant_rank = 0;
+	short int significant_rank;
 	//Двигаемся от страшего (знакового) бита к младшему.
 	for (short int i = 0; i < 16; i++)
 	{
@@ -68,6 +77,7 @@ void br_short_int()
 		{
 			if (i == 0)
 			{
+				significant_rank = -1;
 				cout << "1 ";
 			}
 			else
@@ -86,10 +96,18 @@ void br_short_int()
 		{
 			if (i == 0)
 			{
+				significant_rank = 0;
 				cout << "0 ";
 			}
 			else
 			{
+				if (significant_rank == -1)
+				{
+					significant_rank += 2;
+					//Выделение значащих разрядов цветом.
+					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+				}
 				cout << "0";
 			}
 		}
