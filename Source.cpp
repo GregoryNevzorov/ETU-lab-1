@@ -377,6 +377,21 @@ void br_double() //with reinterpret_cast().
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
+void shift_right_int()
+{
+
+}
+
+void shift_right_float()
+{
+
+}
+
+void shift_right_double()
+{
+
+}
+
 void shift_right()
 {
 	char end = 'y';
@@ -407,21 +422,6 @@ void shift_right()
 		cout << "Run this function again now? (y/n) (one lowercase letter and 'Enter')\n";
 		cin >> end;
 	}
-}
-
-void shift_right_int()
-{
-
-}
-
-void shift_right_float()
-{
-
-}
-
-void shift_right_double()
-{
-
 }
 
 int main()
