@@ -377,18 +377,50 @@ void br_double() //with reinterpret_cast().
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
+void shift_right()
+{
+	char end = 'y';
+	while (end == 'y')
+	{
+		cout << "Enter the number corresponding to the type of argument. (Arabic numerals only.)\n";
+		cout << "1 - int\n";
+		cout << "2 - float\n";
+		cout << "3 - double\n";
+		short int selector;
+		cin >> selector;
+		switch (selector)
+		{
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			break;
+		default:
+			cout << "There is no type with this number!\n";
+			break;
+		}
+		//Проверка на повторный запуск программы.
+		cout << "Run this function again now? (y/n) (one lowercase letter and 'Enter')\n";
+		cin >> end;
+	}
+}
+
 int main()
 {
 	char end = 'y';
 	while (end == 'y')
 	{
 		cout << "Enter the number of the corresponding data type or function. (Arabic numerals only.)\n";
-		cout << "1 - int.\n";
-		cout << "2 - short int.\n";
-		cout << "3 - unsigned int.\n";
-		cout << "4 - float.\n";
-		cout << "5 - double.\n";
-		cout << "6 - function shifts all bits equal to one to the right.\n";
+		cout << "1 - int\n";
+		cout << "2 - short int\n";
+		cout << "3 - unsigned int\n";
+		cout << "4 - float\n";
+		cout << "5 - double\n";
+		cout << "6 - this function shifts all bits equal to one to the right\n";
 		short int selector;
 		cin >> selector;
 		switch (selector)
@@ -409,10 +441,11 @@ int main()
 			br_double();
 			break;
 		case 6:
-
+			shift_right();
 			break;
 		default:
 			cout << "There is no type or function with this number!\n";
+			break;
 		}
 		//Проверка на повторный запуск программы.
 		cout << "Run this program again now? (y/n) (one lowercase letter and 'Enter')\n";
