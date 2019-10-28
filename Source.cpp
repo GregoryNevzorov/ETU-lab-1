@@ -391,13 +391,13 @@ void shift_right()
 		switch (selector)
 		{
 		case 1:
-
+			shift_right_int();
 			break;
 		case 2:
-
+			shift_right_float();
 			break;
 		case 3:
-
+			shift_right_double();
 			break;
 		default:
 			cout << "There is no type with this number!\n";
@@ -407,6 +407,21 @@ void shift_right()
 		cout << "Run this function again now? (y/n) (one lowercase letter and 'Enter')\n";
 		cin >> end;
 	}
+}
+
+void shift_right_int()
+{
+
+}
+
+void shift_right_float()
+{
+
+}
+
+void shift_right_double()
+{
+
 }
 
 int main()
