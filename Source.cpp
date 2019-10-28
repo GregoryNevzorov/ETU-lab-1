@@ -32,7 +32,6 @@ void br_int()
 				}
 				cout << "1";
 			}
-			marker = marker >> 1;
 		}
 		else
 		{
@@ -44,8 +43,8 @@ void br_int()
 			{
 				cout << "0";
 			}
-			marker = marker >> 1;
 		}
+		marker >>= 1;
 	}
 	cout << endl;
 	//Обратная процедура.
@@ -82,7 +81,6 @@ void br_short_int()
 				}
 				cout << "1";
 			}
-			marker = marker >> 1;
 		}
 		else
 		{
@@ -94,8 +92,8 @@ void br_short_int()
 			{
 				cout << "0";
 			}
-			marker = marker >> 1;
 		}
+		marker >>= 1;
 	}
 	cout << endl;
 	//Обратная процедура.
@@ -130,7 +128,7 @@ void br_unsigned_int()
 		{
 			cout << "0";
 		}
-		marker = marker >> 1;
+		marker >>= 1;
 	}
 	cout << endl;
 	//Обратная процедура.
@@ -164,7 +162,7 @@ float br_float_reinterpret_cast() //reinterpret_cast - no unions.
 				//Переход на цвет зеленый порядка.
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
-			if (i == 9)
+			else if (i == 9)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -175,7 +173,6 @@ float br_float_reinterpret_cast() //reinterpret_cast - no unions.
 			{
 				cout << "1";
 			}
-			marker = marker >> 1;
 		}
 		else
 		{
@@ -188,7 +185,7 @@ float br_float_reinterpret_cast() //reinterpret_cast - no unions.
 				//Переход на цвет зеленый порядка.
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
-			if (i == 9)
+			else if (i == 9)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -199,8 +196,8 @@ float br_float_reinterpret_cast() //reinterpret_cast - no unions.
 			{
 				cout << "0";
 			}
-			marker = marker >> 1;
 		}
+		marker >>= 1;
 	}
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -234,7 +231,7 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 				//Переход на цвет зеленый порядка.
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
-			if (i == 9)
+			else if (i == 9)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -245,7 +242,6 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 			{
 				cout << "1";
 			}
-			marker = marker >> 1;
 		}
 		else
 		{
@@ -258,7 +254,7 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 				//Переход на цвет зеленый порядка.
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
-			if (i == 9)
+			else if (i == 9)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -269,8 +265,8 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 			{
 				cout << "0";
 			}
-			marker = marker >> 1;
 		}
+		marker >>= 1;
 	}
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -278,76 +274,22 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 	cout << " -- With the help of the union.\n";
 }
 
-void br_double() //union.
+void br_double() //with reinterpret_cast().
 {
-	union double_to_int //Объявление объединения.
-	{
-		double source;
-		long int conversion;
-	};
-	double_to_int dti; //Создание экземпляра.
 	cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
-	cin >> dti.source;
-	unsigned long int marker = 1 << 31;
-	for (short int i = 0; i < 32; i++) //Правая половина double, до битового смещения.
-	{
-		if ((dti.conversion & marker) == marker)
-		{
-			if (i == 0)
-			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "1 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			if (i == 11)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-				cout << "1";
-			}
-			else
-			{
-				cout << "1";
-			}
-			marker = marker >> 1;
-		}
-		else
-		{
-			if (i == 0)
-			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "0 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			if (i == 11)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-				cout << "0";
-			}
-			else
-			{
-				cout << "0";
-			}
-			marker = marker >> 1;
-		}
-	}
-	double* ptr_double = &dti.source;
+	double double_number;
+	cin >> double_number;
+	//Создание double указателя на вводимое число.
+	double* ptr_double = &double_number;
+	//Перевод double указателя к типу long int.
 	long int* ptr_int = reinterpret_cast<long int*>(ptr_double);
+	//Смещение указателя налево (на его размер - 4 байта), до знакового разряда мантиссы.
 	ptr_int++;
-	dti.conversion = *ptr_int;
-	marker = 1 << 31;
-	for (short int i = 0; i < 32; i++) //Правая половина double, до битового смещения.
+	//Значение для сравнения с битами вводимого числа.
+	unsigned long int marker = 1 << 31;
+	for (short int i = 0; i < 32; i++)
 	{
-		if ((dti.conversion & marker) == marker)
+		if ((*ptr_int & marker) == marker)
 		{
 			if (i == 0)
 			{
@@ -358,7 +300,7 @@ void br_double() //union.
 				//Переход на цвет зеленый порядка.
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
-			if (i == 11)
+			else if (i == 12)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -369,7 +311,6 @@ void br_double() //union.
 			{
 				cout << "1";
 			}
-			marker = marker >> 1;
 		}
 		else
 		{
@@ -382,7 +323,7 @@ void br_double() //union.
 				//Переход на цвет зеленый порядка.
 				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 			}
-			if (i == 11)
+			else if (i == 12)
 			{
 				//Выделение мантиссы красным цветом.
 				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -393,8 +334,23 @@ void br_double() //union.
 			{
 				cout << "0";
 			}
-			marker = marker >> 1;
 		}
+		marker >>= 1;
+	}
+	//Смещение указателя направо, до конца двоичной записи мантиссы.
+	ptr_int--;
+	marker = 1 << 31;
+	for (short int i = 0; i < 32; i++)
+	{
+		if ((*ptr_int & marker) == marker)
+		{
+			cout << "1";
+		}
+		else
+		{
+			cout << "0";
+		}
+		marker = marker >> 1;
 	}
 	//Конец функции.
 	cout << endl;
@@ -429,7 +385,7 @@ int main()
 			br_unsigned_int();
 			break;
 		case 4:
-			br_float_union(br_float_reinterpret_cast());
+			br_float_union(br_float_reinterpret_cast()); // Две функции разными методами выводят двоичное представление float.
 			break;
 		case 5:
 			br_double();
