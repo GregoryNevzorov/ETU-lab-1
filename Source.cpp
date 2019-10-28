@@ -138,13 +138,13 @@ void br_unsigned_int()
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
-void br_float_reinterpret_cast() //reinterpret_cast - no unions.
+float br_float_reinterpret_cast() //reinterpret_cast - no unions.
 {
 	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
 	float float_number;
 	cin >> float_number;
 	//Указатель типа int ссылается на значение по адресу переменной типа float.
-	int* pointer = reinterpret_cast<int*>(&float_number);
+	long int* pointer = reinterpret_cast<long int*>(&float_number);
 	//Переменная типа int получает двоичное представление переменной float через указатель.
 	//Компилятор будет интерпретировать этот двоичный код как переменную типа int.
 	long int gross_transformation = * pointer;
@@ -202,13 +202,14 @@ void br_float_reinterpret_cast() //reinterpret_cast - no unions.
 			marker = marker >> 1;
 		}
 	}
-	cout << endl;
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	cout << " -- By means of a rough conversion.\n";
+	return float_number;
 }
 
-void br_float_union() //union - no reinterpret_cast.
+void br_float_union(float float_var) //union - no reinterpret_cast.
 {
 	union float_to_int
 	{
@@ -216,8 +217,7 @@ void br_float_union() //union - no reinterpret_cast.
 		long int conversion;
 	};
 	float_to_int fti;
-	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
-	cin >> fti.source;
+	fti.source = float_var;
 	//Значение для сравнения с битами вводимого числа.
 	unsigned long int marker = 1 << 31;
 	//Двигаемся от страшего бита к младшему.
@@ -272,10 +272,10 @@ void br_float_union() //union - no reinterpret_cast.
 			marker = marker >> 1;
 		}
 	}
-	cout << endl;
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	cout << " -- With the help of the union.\n";
 }
 
 void br_double() //union.
@@ -409,10 +409,13 @@ int main()
 	while (end == 'y')
 	{
 		cout << "Enter the number of the corresponding data type or function. (Arabic numerals only.)\n";
-		cout << "1 - int. 2 - short int. 3 - unsigned int.\n";
-		cout << "4 - float. 5 - double.\n";
+		cout << "1 - int.\n";
+		cout << "2 - short int.\n";
+		cout << "3 - unsigned int.\n";
+		cout << "4 - float.\n";
+		cout << "5 - double.\n";
 		cout << "6 - function shifts all bits equal to one to the right.\n";
-		int selector;
+		short int selector;
 		cin >> selector;
 		switch (selector)
 		{
@@ -426,13 +429,14 @@ int main()
 			br_unsigned_int();
 			break;
 		case 4:
-			br_float_reinterpret_cast();
-			br_float_union();
+			br_float_union(br_float_reinterpret_cast());
 			break;
 		case 5:
 			br_double();
+			break;
 		case 6:
-			;
+
+			break;
 		default:
 			cout << "There is no type or function with this number!\n";
 		}
