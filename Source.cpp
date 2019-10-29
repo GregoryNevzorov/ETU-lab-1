@@ -3,11 +3,18 @@
 
 using namespace std;
 
-void br_int()
+long int br_int(long int input, short int selector)
 {
-	cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
 	long int integer_number;
-	cin >> integer_number;
+	if (selector == 0)
+	{
+		cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
+		cin >> integer_number;
+	}
+	else
+	{
+		integer_number = input;
+	}
 	//Значение для сравнения с битами вводимого числа.
 	unsigned long int marker = 1 << 31;
 	//Для отображения значащих разрядов.
@@ -59,6 +66,7 @@ void br_int()
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	return 0;
 }
 
 void br_short_int()
@@ -154,22 +162,27 @@ void br_unsigned_int()
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
 }
 
-float br_float_reinterpret_cast() //reinterpret_cast - no unions.
+float br_float_reinterpret_cast(float input, short int selector) //reinterpret_cast - no unions.
 {
-	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
 	float float_number;
-	cin >> float_number;
+	if (selector == 0)
+	{
+		cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
+		cin >> float_number;
+	}
+	else
+	{
+		float_number = input;
+	}
 	//Указатель типа int ссылается на значение по адресу переменной типа float.
 	long int* pointer = reinterpret_cast<long int*>(&float_number);
-	//Переменная типа int получает двоичное представление переменной float через указатель.
 	//Компилятор будет интерпретировать этот двоичный код как переменную типа int.
-	long int gross_transformation = * pointer;
 	//Значение для сравнения с битами вводимого числа.
 	unsigned long int marker = 1 << 31;
 	//Двигаемся от страшего бита к младшему.
 	for (short int i = 0; i < 32; i++)
 	{
-		if ((marker & gross_transformation) == marker)
+		if ((marker & *pointer) == marker)
 		{
 			if (i == 0)
 			{
@@ -220,7 +233,14 @@ float br_float_reinterpret_cast() //reinterpret_cast - no unions.
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
-	cout << " -- By means of a rough conversion.\n";
+	if (selector == 0)
+	{
+		cout << " -- By means of a rough conversion.\n";
+	}
+	else
+	{
+		cout << endl;
+	}
 	return float_number;
 }
 
@@ -379,12 +399,74 @@ void br_double() //with reinterpret_cast().
 
 void shift_right_int()
 {
-
+	long int integer_number;
+	cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
+	cin >> integer_number;
+	//Число до сдвига.
+	cout << "Before:\n";
+	br_int(integer_number, 1);
+	unsigned long int marker = 1 << 31;
+	short int counter = 0;
+	for (short int i = 0; i < 32; i++)
+	{
+		if ((marker & integer_number) == marker)
+		{
+			if (counter == 0)
+			{
+				integer_number -= marker;
+				counter = 1;
+			}
+		}
+		else
+		{
+			if (counter == 1)
+			{
+				integer_number += marker;
+				counter = 0;
+			}
+		}
+		marker >>= 1;
+	}
+	//Число после сдвига.
+	cout << "After:\n";
+	br_int(integer_number, 1);
 }
 
 void shift_right_float()
 {
-
+	float float_number;
+	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
+	cin >> float_number;
+	//Число до сдвига.
+	cout << "Before:\n";
+	br_float_reinterpret_cast(float_number, 1);
+	//Преобразование для побитового сравнения.
+	long int* pointer = reinterpret_cast<long int*>(&float_number);
+	unsigned long int marker = 1 << 31;
+	short int counter = 0;
+	for (short int i = 0; i < 32; i++)
+	{
+		if ((marker & *pointer) == marker)
+		{
+			if (counter == 0)
+			{
+				*pointer -= marker;
+				counter = 1;
+			}
+		}
+		else
+		{
+			if (counter == 1)
+			{
+				*pointer += marker;
+				counter = 0;
+			}
+		}
+		marker >>= 1;
+	}
+	//Число после сдвига.
+	cout << "After:\n";
+	br_float_reinterpret_cast(float_number, 1);
 }
 
 void shift_right_double()
@@ -441,7 +523,7 @@ int main()
 		switch (selector)
 		{
 		case 1:
-			br_int();
+			br_int(0,0);
 			break;
 		case 2:
 			br_short_int();
@@ -450,7 +532,7 @@ int main()
 			br_unsigned_int();
 			break;
 		case 4:
-			br_float_union(br_float_reinterpret_cast()); // Две функции разными методами выводят двоичное представление float.
+			br_float_union(br_float_reinterpret_cast(0,0)); // Две функции разными методами выводят двоичное представление float.
 			break;
 		case 5:
 			br_double();
