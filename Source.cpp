@@ -312,15 +312,19 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 	cout << " -- With the help of the union.\n";
 }
 
-void br_double() //with reinterpret_cast().
+double br_double(double input, short int selector) //with reinterpret_cast().
 {
-	cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
 	double double_number;
-	cin >> double_number;
-	//Создание double указателя на вводимое число.
-	double* ptr_double = &double_number;
-	//Перевод double указателя к типу long int.
-	long int* ptr_int = reinterpret_cast<long int*>(ptr_double);
+	if (selector == 0)
+	{
+		cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
+		cin >> double_number;
+	}
+	else
+	{
+		double_number = input;
+	}
+	long int* ptr_int = reinterpret_cast<long int*>(&double_number);
 	//Смещение указателя налево (на его размер - 4 байта), до знакового разряда мантиссы.
 	ptr_int++;
 	//Значение для сравнения с битами вводимого числа.
@@ -395,6 +399,7 @@ void br_double() //with reinterpret_cast().
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	return 0;
 }
 
 void shift_right_int()
@@ -471,7 +476,48 @@ void shift_right_float()
 
 void shift_right_double()
 {
-
+	double double_number;
+	cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
+	cin >> double_number;
+	//Число до сдвига.
+	cout << "Before:\n";
+	br_double(double_number, 1);
+	long int* pointer = reinterpret_cast<long int*>(&double_number);
+	//Смещение указателя налево (на его размер - 4 байта), до знакового разряда мантиссы.
+	pointer++;
+	unsigned long int marker = 1 << 31;
+	short int counter = 0;
+	for (short int j = 0; j < 2; j++)
+	{
+		for (short int i = 0; i < 32; i++)
+		{
+			if ((marker & *pointer) == marker)
+			{
+				if (counter == 0)
+				{
+					*pointer -= marker;
+					counter = 1;
+				}
+			}
+			else
+			{
+				if (counter == 1)
+				{
+					*pointer += marker;
+					counter = 0;
+				}
+			}
+			marker >>= 1;
+		}
+		if (j == 0)
+		{
+			pointer--;
+			marker = 1 << 31;
+		}
+	}
+	//Число после сдвига.
+	cout << "After:\n";
+	br_double(double_number, 1);
 }
 
 void shift_right()
@@ -535,7 +581,7 @@ int main()
 			br_float_union(br_float_reinterpret_cast(0,0)); // Две функции разными методами выводят двоичное представление float.
 			break;
 		case 5:
-			br_double();
+			br_double(0,0);
 			break;
 		case 6:
 			shift_right();
