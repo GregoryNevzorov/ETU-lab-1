@@ -435,6 +435,7 @@ void shift_right_int()
 	//Число после сдвига.
 	cout << "After:\n";
 	br_int(integer_number, 1);
+	cout << integer_number << "\n";
 }
 
 void shift_right_float()
@@ -472,6 +473,7 @@ void shift_right_float()
 	//Число после сдвига.
 	cout << "After:\n";
 	br_float_reinterpret_cast(float_number, 1);
+	cout << float_number << "\n";
 }
 
 void shift_right_double()
@@ -518,6 +520,7 @@ void shift_right_double()
 	//Число после сдвига.
 	cout << "After:\n";
 	br_double(double_number, 1);
+	cout << double_number << "\n";
 }
 
 void shift_right()
