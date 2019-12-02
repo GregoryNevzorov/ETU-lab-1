@@ -3,70 +3,64 @@
 
 using namespace std;
 
-long int br_int(long int input, short int selector)
+void printLongIntegerInBinary(long int inputFromOutside = 0, bool inputModeSwitch = false)
 {
-	long int integer_number;
-	if (selector == 0)
+	system("cls");
+
+	long int* enteredNumber = new long int;
+	if (inputModeSwitch == false)
 	{
 		cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
-		cin >> integer_number;
+		cin >> *enteredNumber;
 	}
 	else
 	{
-		integer_number = input;
+		*enteredNumber = inputFromOutside;
 	}
-	//Значение для сравнения с битами вводимого числа.
-	unsigned long int marker = 1 << 31;
-	//Для отображения значащих разрядов.
-	short int significant_rank;
-	//Двигаемся от страшего (знакового) бита к младшему.
+
+	unsigned long int* movingBitForComparison = new unsigned long int(1 << 31);
 	for (short int i = 0; i < 32; i++)
 	{
-		if ((marker & integer_number) == marker)
+		if ((*movingBitForComparison & *enteredNumber) == *movingBitForComparison)
 		{
-			if (i == 0)
+			if (i != 0)
 			{
-				significant_rank = -1;
-				cout << "1 ";
+				if (*enteredNumber > 0)
+				{
+					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+				}
+				cout << "1";
 			}
 			else
 			{
-				if (significant_rank == 0)
-				{
-					significant_rank += 1;
-					//Выделение значащих разрядов цветом.
-					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-                    SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
-				}
-				cout << "1";
+				cout << "1 ";
 			}
 		}
 		else
 		{
-			if (i == 0)
+			if (i != 0)
 			{
-				significant_rank = 0;
-				cout << "0 ";
-			}
-			else
-			{
-				if (significant_rank == -1)
+				if (*enteredNumber < 0)
 				{
-					significant_rank += 2;
-					//Выделение значащих разрядов цветом.
 					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 				}
 				cout << "0";
 			}
+			else
+			{
+				cout << "0 ";
+			}
 		}
-		marker >>= 1;
+		*movingBitForComparison >>= 1;
 	}
-	cout << endl;
-	//Обратная процедура.
+
+	cout << "\n";
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
-	return 0;
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // DARKGRAY
+	delete enteredNumber;
+	delete movingBitForComparison;
 }
 
 void br_short_int()
@@ -312,7 +306,7 @@ void br_float_union(float float_var) //union - no reinterpret_cast.
 	cout << " -- With the help of the union.\n";
 }
 
-double br_double(double input, short int selector) //with reinterpret_cast().
+void br_double(double input = 0, short int selector = 0) //with reinterpret_cast().
 {
 	double double_number;
 	if (selector == 0)
@@ -399,7 +393,6 @@ double br_double(double input, short int selector) //with reinterpret_cast().
 	//Обратная процедура.
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
-	return 0;
 }
 
 void shift_right_int()
@@ -409,7 +402,7 @@ void shift_right_int()
 	cin >> integer_number;
 	//Число до сдвига.
 	cout << "Before:\n";
-	br_int(integer_number, 1);
+	printLongIntegerInBinary(integer_number, true);
 	unsigned long int marker = 1 << 31;
 	short int counter = 0;
 	for (short int i = 0; i < 32; i++)
@@ -434,7 +427,7 @@ void shift_right_int()
 	}
 	//Число после сдвига.
 	cout << "After:\n";
-	br_int(integer_number, 1);
+	printLongIntegerInBinary(integer_number, true);
 	cout << integer_number << "\n";
 }
 
@@ -572,7 +565,7 @@ int main()
 		switch (selector)
 		{
 		case 1:
-			br_int(0,0);
+			printLongIntegerInBinary();
 			break;
 		case 2:
 			br_short_int();
@@ -584,7 +577,7 @@ int main()
 			br_float_union(br_float_reinterpret_cast(0,0)); // Две функции разными методами выводят двоичное представление float.
 			break;
 		case 5:
-			br_double(0,0);
+			br_double();
 			break;
 		case 6:
 			shift_right();
