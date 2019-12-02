@@ -10,7 +10,7 @@ void printLongIntegerInBinary(long int inputFromOutside = 0, bool inputModeSwitc
 	long int* enteredNumber = new long int;
 	if (inputModeSwitch == false)
 	{
-		cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
+		cout << "Enter an 'long' integer. (-2147483647 <= x <= 2147483647)\n";
 		cin >> *enteredNumber;
 	}
 	else
@@ -63,62 +63,57 @@ void printLongIntegerInBinary(long int inputFromOutside = 0, bool inputModeSwitc
 	delete movingBitForComparison;
 }
 
-void br_short_int()
+void printShortIntegerInBinary()
 {
-	cout << "Enter an short integer. (-32767 <= x <= 32767)\n";
-	short int short_integer_number;
-	cin >> short_integer_number;
-	//Значение для сравнения с битами вводимого числа.
-	unsigned short int marker = 1 << 15;
-	//Для отображения значащих разрядов.
-	short int significant_rank;
-	//Двигаемся от страшего (знакового) бита к младшему.
+	system("cls");
+
+	short int* enteredNumber = new short int;
+	cout << "Enter an 'short' integer. (-32767 <= x <= 32767)\n";
+	cin >> *enteredNumber;
+
+	unsigned short int* movingBitForComparison = new unsigned short int(1 << 15);
 	for (short int i = 0; i < 16; i++)
 	{
-		if ((marker & short_integer_number) == marker)
+		if ((*movingBitForComparison & *enteredNumber) == *movingBitForComparison)
 		{
-			if (i == 0)
+			if (i != 0)
 			{
-				significant_rank = -1;
-				cout << "1 ";
-			}
-			else
-			{
-				if (significant_rank == 0)
+				if (*enteredNumber > 0)
 				{
-					significant_rank += 1;
-					//Выделение значащих разрядов цветом.
 					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 				}
 				cout << "1";
 			}
+			else
+			{
+				cout << "1 ";
+			}
 		}
 		else
 		{
-			if (i == 0)
+			if (i != 0)
 			{
-				significant_rank = 0;
-				cout << "0 ";
-			}
-			else
-			{
-				if (significant_rank == -1)
+				if (*enteredNumber < 0)
 				{
-					significant_rank += 2;
-					//Выделение значащих разрядов цветом.
 					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 				}
 				cout << "0";
 			}
+			else
+			{
+				cout << "0 ";
+			}
 		}
-		marker >>= 1;
+		*movingBitForComparison >>= 1;
 	}
-	cout << endl;
-	//Обратная процедура.
+
+	cout << "\n";
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // DARKGRAY
+	delete enteredNumber;
+	delete movingBitForComparison;
 }
 
 void br_unsigned_int()
@@ -568,7 +563,7 @@ int main()
 			printLongIntegerInBinary();
 			break;
 		case 2:
-			br_short_int();
+			printShortIntegerInBinary();
 			break;
 		case 3:
 			br_unsigned_int();
