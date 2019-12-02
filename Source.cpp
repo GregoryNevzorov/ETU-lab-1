@@ -1,7 +1,138 @@
 #include <iostream>
 #include <Windows.h>
+#include <conio.h>
 
 using namespace std;
+
+short int mainMenu()
+{
+	system("cls");
+
+	short int numberOfSelectedOption = 1;
+	short int* pressedButtonCode = new short int;
+	while (true)
+	{
+		if (numberOfSelectedOption == 1)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "1. Long Integer\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "1. Long Integer\n";
+		}
+		if (numberOfSelectedOption == 2)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "2. Short Integer\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "2. Short Integer\n";
+		}
+		if (numberOfSelectedOption == 3)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "3. Unsigned Long Integer\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "3. Unsigned Long Integer\n";
+		}
+		if (numberOfSelectedOption == 4)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "4. Float\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "4. Float\n";
+		}
+		if (numberOfSelectedOption == 5)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "5. Long Double\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "5. Long Double\n";
+		}
+		if (numberOfSelectedOption == 6)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "6. Shifts all bits equal to one to the right\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "6. Shifts all bits equal to one to the right\n";
+		}
+
+		*pressedButtonCode = _getch();
+		system("cls");
+		switch (*pressedButtonCode)
+		{
+		case 72: // 'Стрелка вверх'
+
+
+		case 87: // 'W'
+
+
+		case 119: // 'w'
+
+
+		case 150: // 'Ц'
+
+
+		case 230:  // 'ц'
+			numberOfSelectedOption -= 1;
+			if (numberOfSelectedOption < 1)
+			{
+				numberOfSelectedOption = 6;
+			}
+			break;
+
+		case 80: // 'Стрелка вниз'
+
+
+		case 83: // 'S'
+
+
+		case 115: // 's'
+
+
+		case 155: // 'Ы'
+
+
+		case 235: // 'ы'
+			numberOfSelectedOption += 1;
+			if (numberOfSelectedOption > 6)
+			{
+				numberOfSelectedOption = 1;
+			}
+			break;
+
+		case 13: // 'Enter'
+			delete pressedButtonCode;
+			return numberOfSelectedOption;
+			break;
+
+		default:
+			break;
+		}
+	}
+}
 
 void printLongIntegerInBinary(long int inputFromOutside = 0, bool inputModeSwitch = false)
 {
@@ -276,6 +407,7 @@ void printLongDoubleInBinary(double inputFromOutside = 0, bool inputModeSwitch =
 		}
 		*movingBitForComparison >>= 1;
 	}
+
 	//Смещение указателя направо, до конца двоичной записи мантиссы.
 	recastPointerToLongInteger--;
 	*movingBitForComparison = 1 << 31;
@@ -454,45 +586,53 @@ void shift_right()
 
 int main()
 {
-	char end = 'y';
-	while (end == 'y')
+	short int* selectedFunctionNumber = new short int;
+	short int* pressedButtonCode = new short int(0);
+	while (true)
 	{
-		cout << "Enter the number of the corresponding data type or function. (Arabic numerals only.)\n";
-		cout << "1 - int\n";
-		cout << "2 - short int\n";
-		cout << "3 - unsigned int\n";
-		cout << "4 - float\n";
-		cout << "5 - double\n";
-		cout << "6 - this function shifts all bits equal to one to the right\n";
-		short int selector;
-		cin >> selector;
-		switch (selector)
+		*selectedFunctionNumber = mainMenu();
+		switch (*selectedFunctionNumber)
 		{
 		case 1:
 			printLongIntegerInBinary();
 			break;
+
 		case 2:
 			printShortIntegerInBinary();
 			break;
+
 		case 3:
 			printUnsignedLongIntegerInBinary();
 			break;
+
 		case 4:
 			printFloatInBinary();
 			break;
+
 		case 5:
 			printLongDoubleInBinary();
 			break;
+
 		case 6:
 			shift_right();
 			break;
+
 		default:
-			cout << "There is no type or function with this number!\n";
 			break;
 		}
-		//Проверка на повторный запуск программы.
-		cout << "Run this program again now? (y/n) (one lowercase letter and 'Enter')\n";
-		cin >> end;
+
+		cout << "Press 'Enter' to return to the main menu\n";
+		cout << "Press 'Escape' to complete the work of this programme\n";
+		while (*pressedButtonCode != 13)
+		{
+			*pressedButtonCode = _getch();
+			if (*pressedButtonCode == 27)
+			{
+				delete selectedFunctionNumber;
+				delete pressedButtonCode;
+				return 0;
+			}
+		}
+		*pressedButtonCode = 0;
 	}
-	return 0;
 }
