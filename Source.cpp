@@ -116,39 +116,35 @@ void printShortIntegerInBinary()
 	delete movingBitForComparison;
 }
 
-void br_unsigned_int()
+void printUnsignedLongIntegerInBinary()
 {
-	cout << "Enter an unsigned integer. (0 <= x <= 4294967295)\n";
-	unsigned long int integer_unsigned_number;
-	cin >> integer_unsigned_number;
-	//Значение для сравнения с битами вводимого числа.
-	unsigned long int marker = 1 << 31;
-	//Для отображения значащих разрядов.
-	short int significant_rank = 0;
-	//Двигаемся от страшего бита к младшему.
+	system("cls");
+
+	unsigned long int* enteredNumber = new unsigned long int;
+	cout << "Enter an 'unsigned long' integer. (0 <= x <= 4294967295)\n";
+	cin >> *enteredNumber;
+
+	unsigned long int* movingBitForComparison = new unsigned long int(1 << 31);
 	for (short int i = 0; i < 32; i++)
 	{
-		if ((marker & integer_unsigned_number) == marker)
+		if ((*movingBitForComparison & *enteredNumber) == *movingBitForComparison)
 		{
-			if (significant_rank == 0)
-			{
-					significant_rank += 1;
-					//Выделение значащих разрядов цветом.
-					HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-					SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
-			}
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
 			cout << "1";
 		}
 		else
 		{
 			cout << "0";
 		}
-		marker >>= 1;
+		*movingBitForComparison >>= 1;
 	}
-	cout << endl;
-	//Обратная процедура.
+
+	cout << "\n";
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // DARKGRAY
+	delete enteredNumber;
+	delete movingBitForComparison;
 }
 
 float br_float_reinterpret_cast(float input, short int selector) //reinterpret_cast - no unions.
@@ -566,7 +562,7 @@ int main()
 			printShortIntegerInBinary();
 			break;
 		case 3:
-			br_unsigned_int();
+			printUnsignedLongIntegerInBinary();
 			break;
 		case 4:
 			br_float_union(br_float_reinterpret_cast(0,0)); // Две функции разными методами выводят двоичное представление float.
