@@ -216,79 +216,72 @@ void printFloatInBinary(float inputFromOutside = 0, bool inputModeSwitch = false
 	delete movingBitForComparison;
 }
 
-void br_double(double input = 0, short int selector = 0) //with reinterpret_cast().
+void printLongDoubleInBinary(double inputFromOutside = 0, bool inputModeSwitch = false)
 {
-	double double_number;
-	if (selector == 0)
+	long double* enteredNumber = new long double;
+	if (inputModeSwitch == false)
 	{
-		cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
-		cin >> double_number;
+		system("cls");
+		cout << "Enter an 'long' double. (2.2E-308 <= x <= 1.8E+308)\n";
+		cin >> *enteredNumber;
 	}
 	else
 	{
-		double_number = input;
+		*enteredNumber = inputFromOutside;
 	}
-	long int* ptr_int = reinterpret_cast<long int*>(&double_number);
+
+	long int* recastPointerToLongInteger = reinterpret_cast<long int*>(enteredNumber);
 	//Смещение указателя налево (на его размер - 4 байта), до знакового разряда мантиссы.
-	ptr_int++;
-	//Значение для сравнения с битами вводимого числа.
-	unsigned long int marker = 1 << 31;
+	recastPointerToLongInteger++;
+
+	unsigned long int* movingBitForComparison = new unsigned long int(1 << 31);
 	for (short int i = 0; i < 32; i++)
 	{
-		if ((*ptr_int & marker) == marker)
+		if (i == 0)
 		{
-			if (i == 0)
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		if (i == 1)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+		}
+		if (i == 12)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
+		}
+		if ((*recastPointerToLongInteger & *movingBitForComparison) == *movingBitForComparison)
+		{
+			if (i != 0)
 			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "1 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			else if (i == 12)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 				cout << "1";
 			}
 			else
 			{
-				cout << "1";
+				cout << "1 ";
 			}
 		}
 		else
 		{
-			if (i == 0)
+			if (i != 0)
 			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "0 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			else if (i == 12)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 				cout << "0";
 			}
 			else
 			{
-				cout << "0";
+				cout << "0 ";
 			}
 		}
-		marker >>= 1;
+		*movingBitForComparison >>= 1;
 	}
 	//Смещение указателя направо, до конца двоичной записи мантиссы.
-	ptr_int--;
-	marker = 1 << 31;
+	recastPointerToLongInteger--;
+	*movingBitForComparison = 1 << 31;
 	for (short int i = 0; i < 32; i++)
 	{
-		if ((*ptr_int & marker) == marker)
+		if ((*recastPointerToLongInteger & *movingBitForComparison) == *movingBitForComparison)
 		{
 			cout << "1";
 		}
@@ -296,13 +289,14 @@ void br_double(double input = 0, short int selector = 0) //with reinterpret_cast
 		{
 			cout << "0";
 		}
-		marker = marker >> 1;
+		*movingBitForComparison >>= 1;
 	}
-	//Конец функции.
-	cout << endl;
-	//Обратная процедура.
+
+	cout << "\n";
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // DARKGRAY
+	delete enteredNumber;
+	delete movingBitForComparison;
 }
 
 void shift_right_int()
@@ -386,7 +380,7 @@ void shift_right_double()
 	cin >> double_number;
 	//Число до сдвига.
 	cout << "Before:\n";
-	br_double(double_number, 1);
+	printLongDoubleInBinary(double_number, true);
 	long int* pointer = reinterpret_cast<long int*>(&double_number);
 	//Смещение указателя налево (на его размер - 4 байта), до знакового разряда мантиссы.
 	pointer++;
@@ -422,7 +416,7 @@ void shift_right_double()
 	}
 	//Число после сдвига.
 	cout << "After:\n";
-	br_double(double_number, 1);
+	printLongDoubleInBinary(double_number, true);
 	cout << double_number << "\n";
 }
 
@@ -487,7 +481,7 @@ int main()
 			printFloatInBinary();
 			break;
 		case 5:
-			br_double();
+			printLongDoubleInBinary();
 			break;
 		case 6:
 			shift_right();
