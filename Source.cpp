@@ -5,11 +5,10 @@ using namespace std;
 
 void printLongIntegerInBinary(long int inputFromOutside = 0, bool inputModeSwitch = false)
 {
-	system("cls");
-
 	long int* enteredNumber = new long int;
 	if (inputModeSwitch == false)
 	{
+		system("cls");
 		cout << "Enter an 'long' integer. (-2147483647 <= x <= 2147483647)\n";
 		cin >> *enteredNumber;
 	}
@@ -147,154 +146,74 @@ void printUnsignedLongIntegerInBinary()
 	delete movingBitForComparison;
 }
 
-float br_float_reinterpret_cast(float input, short int selector) //reinterpret_cast - no unions.
+void printFloatInBinary(float inputFromOutside = 0, bool inputModeSwitch = false)
 {
-	float float_number;
-	if (selector == 0)
+	union ReadingFloatAsInteger
 	{
-		cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
-		cin >> float_number;
-	}
-	else
-	{
-		float_number = input;
-	}
-	//Указатель типа int ссылается на значение по адресу переменной типа float.
-	long int* pointer = reinterpret_cast<long int*>(&float_number);
-	//Компилятор будет интерпретировать этот двоичный код как переменную типа int.
-	//Значение для сравнения с битами вводимого числа.
-	unsigned long int marker = 1 << 31;
-	//Двигаемся от страшего бита к младшему.
-	for (short int i = 0; i < 32; i++)
-	{
-		if ((marker & *pointer) == marker)
-		{
-			if (i == 0)
-			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "1 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			else if (i == 9)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-				cout << "1";
-			}
-			else
-			{
-				cout << "1";
-			}
-		}
-		else
-		{
-			if (i == 0)
-			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "0 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			else if (i == 9)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-				cout << "0";
-			}
-			else
-			{
-				cout << "0";
-			}
-		}
-		marker >>= 1;
-	}
-	//Обратная процедура.
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
-	if (selector == 0)
-	{
-		cout << " -- By means of a rough conversion.\n";
-	}
-	else
-	{
-		cout << endl;
-	}
-	return float_number;
-}
-
-void br_float_union(float float_var) //union - no reinterpret_cast.
-{
-	union float_to_int
-	{
-		float source;
-		long int conversion;
+		float asFloat;
+		long int asLongInteger;
 	};
-	float_to_int fti;
-	fti.source = float_var;
-	//Значение для сравнения с битами вводимого числа.
-	unsigned long int marker = 1 << 31;
-	//Двигаемся от страшего бита к младшему.
+	ReadingFloatAsInteger memoryArea;
+
+	if (inputModeSwitch == false)
+	{
+		system("cls");
+		cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
+		cin >> memoryArea.asFloat;
+	}
+	else
+	{
+		memoryArea.asFloat = inputFromOutside;
+	}
+	
+	unsigned long int* movingBitForComparison = new unsigned long int(1 << 31);
 	for (short int i = 0; i < 32; i++)
 	{
-		if ((marker & fti.conversion) == marker)
+		if (i == 0)
 		{
-			if (i == 0)
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		if (i == 1)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+		}
+		if (i == 9)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
+		}
+
+		if ((*movingBitForComparison & memoryArea.asLongInteger) == *movingBitForComparison)
+		{
+			if (i != 0)
 			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "1 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			else if (i == 9)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 				cout << "1";
 			}
 			else
 			{
-				cout << "1";
+				cout << "1 ";
 			}
 		}
 		else
 		{
-			if (i == 0)
+			if (i != 0)
 			{
-				//Выделение знакового разряда синим цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				cout << "0 ";
-				//Переход на цвет зеленый порядка.
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-			}
-			else if (i == 9)
-			{
-				//Выделение мантиссы красным цветом.
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
 				cout << "0";
 			}
 			else
 			{
-				cout << "0";
+				cout << "0 ";
 			}
 		}
-		marker >>= 1;
+		*movingBitForComparison >>= 1;
 	}
-	//Обратная процедура.
+
+	cout << "\n";
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // = DARKGRAY
-	cout << " -- With the help of the union.\n";
+	SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // DARKGRAY
+	delete movingBitForComparison;
 }
 
 void br_double(double input = 0, short int selector = 0) //with reinterpret_cast().
@@ -429,7 +348,7 @@ void shift_right_float()
 	cin >> float_number;
 	//Число до сдвига.
 	cout << "Before:\n";
-	br_float_reinterpret_cast(float_number, 1);
+	printFloatInBinary(float_number, true);
 	//Преобразование для побитового сравнения.
 	long int* pointer = reinterpret_cast<long int*>(&float_number);
 	unsigned long int marker = 1 << 31;
@@ -456,7 +375,7 @@ void shift_right_float()
 	}
 	//Число после сдвига.
 	cout << "After:\n";
-	br_float_reinterpret_cast(float_number, 1);
+	printFloatInBinary(float_number, true);
 	cout << float_number << "\n";
 }
 
@@ -565,7 +484,7 @@ int main()
 			printUnsignedLongIntegerInBinary();
 			break;
 		case 4:
-			br_float_union(br_float_reinterpret_cast(0,0)); // Две функции разными методами выводят двоичное представление float.
+			printFloatInBinary();
 			break;
 		case 5:
 			br_double();
