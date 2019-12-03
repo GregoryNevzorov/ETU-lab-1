@@ -134,6 +134,103 @@ short int mainMenu()
 	}
 }
 
+short int shiftBitsMenu()
+{
+	system("cls");
+
+	short int numberOfSelectedOption = 1;
+	short int* pressedButtonCode = new short int;
+	while (true)
+	{
+		if (numberOfSelectedOption == 1)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "1. Long Integer\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "1. Long Integer\n";
+		}
+		if (numberOfSelectedOption == 2)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "2. Float\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "2. Float\n";
+		}
+		if (numberOfSelectedOption == 3)
+		{
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+			cout << "3. Double\n";
+			SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+		else
+		{
+			cout << "3. Double\n";
+		}
+
+		*pressedButtonCode = _getch();
+		system("cls");
+		switch (*pressedButtonCode)
+		{
+		case 72: // 'Стрелка вверх'
+
+
+		case 87: // 'W'
+
+
+		case 119: // 'w'
+
+
+		case 150: // 'Ц'
+
+
+		case 230:  // 'ц'
+			numberOfSelectedOption -= 1;
+			if (numberOfSelectedOption < 1)
+			{
+				numberOfSelectedOption = 3;
+			}
+			break;
+
+		case 80: // 'Стрелка вниз'
+
+
+		case 83: // 'S'
+
+
+		case 115: // 's'
+
+
+		case 155: // 'Ы'
+
+
+		case 235: // 'ы'
+			numberOfSelectedOption += 1;
+			if (numberOfSelectedOption > 3)
+			{
+				numberOfSelectedOption = 1;
+			}
+			break;
+
+		case 13: // 'Enter'
+			delete pressedButtonCode;
+			return numberOfSelectedOption;
+			break;
+
+		default:
+			break;
+		}
+	}
+}
+
 void printLongIntegerInBinary(long int inputFromOutside = 0, bool inputModeSwitch = false)
 {
 	long int* enteredNumber = new long int;
@@ -552,36 +649,27 @@ void shift_right_double()
 	cout << double_number << "\n";
 }
 
-void shift_right()
+void shiftBitsToRight()
 {
-	char end = 'y';
-	while (end == 'y')
+	short int* selectedFunctionNumber = new short int(shiftBitsMenu());
+	switch (*selectedFunctionNumber)
 	{
-		cout << "Enter the number corresponding to the type of argument. (Arabic numerals only.)\n";
-		cout << "1 - int\n";
-		cout << "2 - float\n";
-		cout << "3 - double\n";
-		short int selector;
-		cin >> selector;
-		switch (selector)
-		{
-		case 1:
-			shift_right_int();
-			break;
-		case 2:
-			shift_right_float();
-			break;
-		case 3:
-			shift_right_double();
-			break;
-		default:
-			cout << "There is no type with this number!\n";
-			break;
-		}
-		//Проверка на повторный запуск программы.
-		cout << "Run this function again now? (y/n) (one lowercase letter and 'Enter')\n";
-		cin >> end;
+	case 1:
+		shift_right_int();
+		break;
+
+	case 2:
+		shift_right_float();
+		break;
+
+	case 3:
+		shift_right_double();
+		break;
+
+	default:
+		break;
 	}
+	delete selectedFunctionNumber;
 }
 
 int main()
@@ -614,7 +702,7 @@ int main()
 			break;
 
 		case 6:
-			shift_right();
+			shiftBitsToRight();
 			break;
 
 		default:
