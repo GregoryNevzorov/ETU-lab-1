@@ -528,148 +528,111 @@ void printLongDoubleInBinary(double inputFromOutside = 0, bool inputModeSwitch =
 	delete movingBitForComparison;
 }
 
-void shift_right_int()
+template <class T> void shiftFunction(T inputFromOutside, short int numberType)
 {
-	long int integer_number;
-	cout << "Enter an integer. (-2147483647 <= x <= 2147483647)\n";
-	cin >> integer_number;
-	//Число до сдвига.
-	cout << "Before:\n";
-	printLongIntegerInBinary(integer_number, true);
-	unsigned long int marker = 1 << 31;
-	short int counter = 0;
-	for (short int i = 0; i < 32; i++)
-	{
-		if ((marker & integer_number) == marker)
-		{
-			if (counter == 0)
-			{
-				integer_number -= marker;
-				counter = 1;
-			}
-		}
-		else
-		{
-			if (counter == 1)
-			{
-				integer_number += marker;
-				counter = 0;
-			}
-		}
-		marker >>= 1;
-	}
-	//Число после сдвига.
-	cout << "After:\n";
-	printLongIntegerInBinary(integer_number, true);
-	cout << integer_number << "\n";
-}
+	T processedNumber(inputFromOutside);
+	long int* processedNumberPointerLongInteger = reinterpret_cast<long int*>(&processedNumber);
 
-void shift_right_float()
-{
-	float float_number;
-	cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
-	cin >> float_number;
-	//Число до сдвига.
 	cout << "Before:\n";
-	printFloatInBinary(float_number, true);
-	//Преобразование для побитового сравнения.
-	long int* pointer = reinterpret_cast<long int*>(&float_number);
-	unsigned long int marker = 1 << 31;
-	short int counter = 0;
-	for (short int i = 0; i < 32; i++)
+	cout << processedNumber << "\n";
+	if (numberType == 0)
 	{
-		if ((marker & *pointer) == marker)
-		{
-			if (counter == 0)
-			{
-				*pointer -= marker;
-				counter = 1;
-			}
-		}
-		else
-		{
-			if (counter == 1)
-			{
-				*pointer += marker;
-				counter = 0;
-			}
-		}
-		marker >>= 1;
+		printLongIntegerInBinary(processedNumber, true);
 	}
-	//Число после сдвига.
-	cout << "After:\n";
-	printFloatInBinary(float_number, true);
-	cout << float_number << "\n";
-}
+	else if (numberType == 1)
+	{
+		printFloatInBinary(processedNumber, true);
+	}
+	else
+	{
+		printLongDoubleInBinary(processedNumber, true);
+		processedNumberPointerLongInteger++;
+	}
 
-void shift_right_double()
-{
-	double double_number;
-	cout << "Enter an double. (2.2E-308 <= x <= 1.8E+308)\n";
-	cin >> double_number;
-	//Число до сдвига.
-	cout << "Before:\n";
-	printLongDoubleInBinary(double_number, true);
-	long int* pointer = reinterpret_cast<long int*>(&double_number);
-	//Смещение указателя налево (на его размер - 4 байта), до знакового разряда мантиссы.
-	pointer++;
-	unsigned long int marker = 1 << 31;
-	short int counter = 0;
+	unsigned long int* movingBitForComparison = new unsigned long int(1 << 31);
+	bool* equalToOne = new bool(false);
 	for (short int j = 0; j < 2; j++)
 	{
 		for (short int i = 0; i < 32; i++)
 		{
-			if ((marker & *pointer) == marker)
+			if ((*movingBitForComparison & *processedNumberPointerLongInteger) == *movingBitForComparison)
 			{
-				if (counter == 0)
+				if (*equalToOne == false)
 				{
-					*pointer -= marker;
-					counter = 1;
+					*processedNumberPointerLongInteger -= *movingBitForComparison;
+					*equalToOne = true;
 				}
 			}
 			else
 			{
-				if (counter == 1)
+				if (*equalToOne == true)
 				{
-					*pointer += marker;
-					counter = 0;
+					*processedNumberPointerLongInteger += *movingBitForComparison;
+					*equalToOne = false;
 				}
 			}
-			marker >>= 1;
+			*movingBitForComparison >>= 1;
 		}
-		if (j == 0)
+		if (numberType == 2)
 		{
-			pointer--;
-			marker = 1 << 31;
+			processedNumberPointerLongInteger--;
+			*movingBitForComparison = 1 << 31;
 		}
 	}
-	//Число после сдвига.
 	cout << "After:\n";
-	printLongDoubleInBinary(double_number, true);
-	cout << double_number << "\n";
+	cout << processedNumber << "\n";
+	if (numberType == 0)
+	{
+		printLongIntegerInBinary(processedNumber, true);
+	}
+	else if (numberType == 1)
+	{
+		printFloatInBinary(processedNumber, true);
+	}
+	else
+	{
+		printLongDoubleInBinary(processedNumber, true);
+	}
+
+	delete movingBitForComparison;
+	delete equalToOne;
 }
 
 void shiftBitsToRight()
 {
+	long int* argForGeneralizedFunctionLongInteger = new long int;
+	float* argForGeneralizedFunctionFloat = new float;
+	long double* argForGeneralizedFunctionLongDouble = new long double;
+
 	short int* selectedFunctionNumber = new short int(shiftBitsMenu());
 	switch (*selectedFunctionNumber)
 	{
 	case 1:
-		shift_right_int();
+		cout << "Enter an 'long' integer. (-2147483647 <= x <= 2147483647)\n";
+		cin >> *argForGeneralizedFunctionLongInteger;
+		shiftFunction(*argForGeneralizedFunctionLongInteger, 0);
 		break;
 
 	case 2:
-		shift_right_float();
+		cout << "Enter an float. (1.8E-38 <= x <= 1.8E+38)\n";
+		cin >> *argForGeneralizedFunctionFloat;
+		shiftFunction(*argForGeneralizedFunctionFloat, 1);
 		break;
 
 	case 3:
-		shift_right_double();
+		cout << "Enter an 'long' double. (2.2E-308 <= x <= 1.8E+308)\n";
+		cin >> *argForGeneralizedFunctionLongDouble;
+		shiftFunction(*argForGeneralizedFunctionLongDouble, 2);
 		break;
 
 	default:
 		break;
 	}
 	delete selectedFunctionNumber;
+
+	delete argForGeneralizedFunctionLongInteger;
+	delete argForGeneralizedFunctionFloat;
+	delete argForGeneralizedFunctionLongDouble;
 }
 
 int main()
